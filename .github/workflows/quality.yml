@@ -1,4 +1,4 @@
-name: Flake8
+name: Quality Checks
 
 on:
   push:
@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Run Python linting
+  python-quality:
+    name: Flake8 Python Quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -46,3 +46,17 @@ jobs:
             --max-complexity=10 \
             --max-line-length=127 \
             --statistics
+
+  dockerfile-quality:
+    name: Hadolint Dockerfile Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Scan root Dockerfile
+        uses: hadolint/hadolint-action@v3.4.0
+        with:
+          dockerfile: ./Dockerfile
